@@ -1,10 +1,10 @@
 var mailConfig = {
-    service: 'qq',
+    service: '163',
     port: 465, // SMTP 端口
     secureConnection: true, // 使用 SSL
     auth: {
-        user: '768065158@qq.com',
+        user: 'jackfungtest@163.com',
         //这里密码不是qq密码，是你设置的smtp密码
-        pass: '*****'
+        pass: 'jackfunghaha123'
     }
 }

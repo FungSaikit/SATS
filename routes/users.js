@@ -5,7 +5,7 @@ var mysql = require('mysql');
 var dbConfig = require('../db/DBConfig');
 var userSQL = require('../db/Usersql');
 
-var pool = mysql.createPool(dbConfig.mysql);
+var pool = mysql.createPool(dbConfig);
 
 var responseJSON = function (res, ret) {
   if (typeof ret == 'undefined') {
@@ -52,20 +52,20 @@ router.post('/login', function (req, res, next) {
     console.log(param);
     connection.query(userSQL.getUserPassword, [param.username], function (err, result) {
       if (result && result.length != 0) {
-        if (result[0].password == param.password){
+        if (result[0].password == param.password) {
           result = {
-            code: 200, 
+            code: 200,
             msg: '验证成功'
           }
         } else {
           result = {
-            code: 401.1, 
+            code: 401.1,
             msg: '密码错误'
-          } 
+          }
         }
       } else {
         result = {
-          code: 403, 
+          code: 403,
           msg: '账户不存在'
         }
       }
@@ -73,6 +73,27 @@ router.post('/login', function (req, res, next) {
       connection.release();
     });
   });
+});
+
+router.post('/getPasswordCheckCode', function (req, res, next) {
+  var checkCode;
+  do {
+    checkCode = Math.floor(Math.random() * 10000);
+  } while (checkCode < 1000);
+  // pool.getConnection(function (err, result) {
+    
+  // });
+  var result = {
+    code: 200, 
+    msg: '已发送验证码！'
+  }
+  console.log(checkCode);
+  responseJSON(res, result);
+});
+
+router.post('/test', function(req, res, next) {
+  console.log(req);
+  res.send('success!');
 });
 
 module.exports = router;
