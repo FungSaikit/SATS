@@ -5,7 +5,14 @@ var mysql = require('mysql');
 var dbConfig = require('../db/DBConfig');
 var userSQL = require('../db/Usersql');
 
+const nodemailer = require('nodemailer');
+var mailConfig = require('../mail/MailConfig');
+
 var pool = mysql.createPool(dbConfig);
+let transporter = nodemailer.createTransport(mailConfig);
+
+
+
 
 var responseJSON = function (res, ret) {
   if (typeof ret == 'undefined') {
@@ -81,17 +88,32 @@ router.post('/getPasswordCheckCode', function (req, res, next) {
     checkCode = Math.floor(Math.random() * 10000);
   } while (checkCode < 1000);
   // pool.getConnection(function (err, result) {
-    
+
   // });
-  var result = {
-    code: 200, 
-    msg: '已发送验证码！'
-  }
-  console.log(checkCode);
-  responseJSON(res, result);
+
+  let mailOptions = {
+    from: 'jackfungtest@163.com', // sender address
+    to: '675703302@qq.com', // list of receivers
+    subject: '二手房交易系统', // Subject line
+    text: '您获取的验证码为：' + checkCode // plain text body
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    var result = {
+      code: 200,
+      checkCode: checkCode,
+      msg: '已发送验证码！'
+    }
+    console.log(checkCode);
+    responseJSON(res, result);
+  });
+
 });
 
-router.post('/test', function(req, res, next) {
+router.post('/test', function (req, res, next) {
   console.log(req);
   res.send('success!');
 });
