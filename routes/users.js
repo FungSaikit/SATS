@@ -82,7 +82,7 @@ router.post('/login', function (req, res, next) {
   });
 });
 
-router.post('/getPasswordCheckCode', function (req, res, next) {
+router.get('/getPasswordCheckCode', function (req, res, next) {
   var checkCode;
   do {
     checkCode = Math.floor(Math.random() * 10000);
@@ -95,7 +95,7 @@ router.post('/getPasswordCheckCode', function (req, res, next) {
     from: 'jackfungtest@163.com', // sender address
     to: '675703302@qq.com', // list of receivers
     subject: '二手房交易系统', // Subject line
-    text: '您获取的验证码为：' + checkCode // plain text body
+    text: '您获取的验证码为：' + checkCode + '，请妥善保管。' // plain text body
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
