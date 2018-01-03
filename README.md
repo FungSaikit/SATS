@@ -1,1 +1,1 @@
-This is the project built by Express.js & Vue.js.
+This is a project built by Express.js.
