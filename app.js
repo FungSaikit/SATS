@@ -6,7 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+var user = require('./routes/user');
+var house = require('./routes/house')
 
 var app = express();
 
@@ -23,7 +24,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/user', user);
+app.use('/house', house);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,7 +45,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var server = app.listen(3000, function() {
+var server = app.listen(3333, function() {
     var host = server.address().address;
     var port = server.address().port;
     console.log('Server is running at http://%s:%s', host, port);
