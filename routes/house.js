@@ -10,7 +10,7 @@ var pool = mysql.createPool(dbConfig);
 //允许跨域
 router.all('*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With,content-type");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
     res.header("X-Powered-By", ' 3.2.1')
     res.header("Content-Type", "application/json;charset=utf-8");
@@ -75,7 +75,7 @@ router.get('/getHouseList', function (req, res, next) {
         }
 
         if (isForSell) {
-            addCondition('(is_for_sell = ' + isForSell + ')'); 
+            addCondition('(is_for_sell = ' + isForSell + ')');
         }
         if (keyword) {
             addCondition('(title like \'%' + keyword + '%\') or (properties like \'%' + keyword + '%\') or (district like \'%' + keyword + '%\')');
@@ -115,7 +115,7 @@ router.get('/getHouseList', function (req, res, next) {
             } else {
                 connection.query(query1, function (err, _result) {
                     resultJSON = {
-                        count: result[0]['count(*)'], 
+                        count: result[0]['count(*)'],
                         list: _result
                     }
                     res.json(resultJSON);
@@ -124,6 +124,29 @@ router.get('/getHouseList', function (req, res, next) {
             }
         });
     });
+});
+
+router.post('/postHouse', (req, res, next) => {
+    console.log(req.body);
+    var form = req.body;
+    pool.getConnection((err, connection) => {
+        connection.query(houseSQL.insert, [form.is_for_sell, form.user, form.title, form.description, form.price, form.price/form.area, form.room_num, form.livingroom_num, form.kitchen_num, form.bathroom_num, form.total_floor, form.floor, form.build_year, form.properties, form.district, form.view_time, form.area, form.inside_area, form.direction, form.lift, form.house_per_floor, form.last_trade, form.trading_right, form.house_age, form.age_limit, form.mortgage, form.house_right, form.house_label, form.decoration_desc, form.main_sellpoint, form.facility, form.traffic, form.house_usage, JSON.stringify(form.fileList), form.construction_type, form.decoration, '0', Date.parse(new Date())], (error, result) => {
+            if (error) {
+                console.log(error);
+                result = {
+                    code: -200,
+                    error: error
+                }
+            } else {
+                result = {
+                    code: 200,
+                    msg: '成功'
+                }
+            }
+            connection.release();
+            res.json(result);
+        });
+    })
 })
 
 
