@@ -4,6 +4,7 @@ var UserSQL = {
     getRegisterCode: 'select identifying_code from register where email_address = ? order by id desc limit 0,1',
     insert: 'INSERT INTO user(email_address, password, nickname) VALUES(?, ?, ?)', 
     queryAll: 'SELECT * FROM User', 
-    getUserPassword: 'select password,id,nickname from user where email_address = ?'
+    getUserPassword: 'select password, id, nickname from user where email_address = ?',
+    getAgentPassword: 'select password, id, name from agent where username = ?'
 };
 module.exports = UserSQL;
